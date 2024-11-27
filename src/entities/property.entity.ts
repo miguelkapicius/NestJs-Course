@@ -1,5 +1,15 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { PropertyFeatures } from './propertyFeatures.entity';
+import { User } from './user.entity';
+import { PropertyType } from './propertyType.entity';
 
 @Entity()
 export class Property {
@@ -21,4 +31,14 @@ export class Property {
     { cascade: true },
   )
   propertyFeatures: PropertyFeatures;
+
+  @ManyToOne(() => User, (user) => user.properties)
+  @JoinColumn({ name: 'ownerId' }) // renomeia a coluna
+  user: User;
+
+  @ManyToMany(() => User, (user) => user.likedProperties)
+  likedBy: User[];
+
+  @ManyToOne(() => PropertyType)
+  type: PropertyType;
 }
